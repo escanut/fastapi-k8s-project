@@ -9,7 +9,7 @@ metadata:
   name: backend-sa
   namespace: web-app
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT_ID:role/fastapi-deployment-backend-irsa-role
+    eks.amazonaws.com/role-arn: arn:aws:iam::AWS_ACCOUNT_ID:role/fastapi-deployment-backend-irsa-role
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -34,7 +34,7 @@ spec:
       
       containers:
       - name: fastapi
-        image: ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/fastapi-repo:latest
+        image: ECR_REGISTRY/ECR_REPOSITORY:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
