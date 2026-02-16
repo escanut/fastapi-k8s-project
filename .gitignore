@@ -25,7 +25,7 @@ kubeconfig
 # Ignore all .deb files in dev and prod folders
 dev/*.deb
 prod/*.deb
-dev/kubectl*
+dev/*kubectl
 
 # Logs / caches
 logs/
