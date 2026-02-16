@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.log
+*.sqlite3
+env/
+venv/
+*.venv
+.env
+
+# Docker / Docker Compose
+*.tar
+docker-compose.override.yml
+*.env.docker
+.docker/
+
+# Minikube / Kubernetes
+.kube/
+kubeconfig
+*.yaml.bak
+*.kube
+
+# Logs / caches
+logs/
+*.log
+*.tmp
+tmp/
+.cache/
+
+# IDEs / Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Misc
+.DS_Store
+Thumbs.db
+*.bak

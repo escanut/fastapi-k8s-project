@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Victor Ojeje | Cloud Engineer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Victor O. Ojeje</h1>
+        <p class="subtitle">Cloud Engineering & DevOps</p>
+
+        <div class="skills">
+            <span>AWS</span>
+            <span>FastAPI</span>
+            <span>Docker</span>
+            <span>Kubernetes (EKS)</span>
+            <span>CI/CD</span>
+            <span>PostgreSQL</span>
+        </div>
+
+        <div class="project-note">
+            <p>
+                This product catalog application is built with FastAPI, containerized using Docker,
+                and deployed to Kubernetes. Health checks validate database connectivity,
+                and the backend runs with async PostgreSQL integration.
+            </p>
+        </div>
+    </section>
+
+    <!-- Health Status -->
+    <div id="health-status" class="health-status"></div>
+
+    <!-- Add Product Form -->
+    <section class="form-section">
+        <h2>Add Product</h2>
+        <form id="product-form">
+            <input type="text" id="name" placeholder="Product Name" required>
+            <textarea id="description" placeholder="Description"></textarea>
+            <input type="number" id="price" placeholder="Price" step="0.01" required>
+            <button type="submit">Add Product</button>
+        </form>
+    </section>
+
+    <!-- Product List -->
+    <section class="products-section">
+        <h2>Products</h2>
+        <div id="products-list"></div>
+    </section>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
