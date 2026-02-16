@@ -1,3 +1,4 @@
+
 # Python
 __pycache__/
 *.py[cod]
@@ -20,8 +21,11 @@ docker-compose.override.yml
 kubeconfig
 *.yaml.bak
 *.kube
-dev/minikube_latest_amd64.deb
-dev/kubectl
+
+# Ignore all .deb files in dev and prod folders
+dev/*.deb
+prod/*.deb
+dev/kubectl*
 
 # Logs / caches
 logs/
@@ -30,13 +34,7 @@ logs/
 tmp/
 .cache/
 
-# IDEs / Editors
+# IDEs
 .vscode/
-.idea/
-*.swp
-*.swo
 
-# Misc
-.DS_Store
-Thumbs.db
-*.bak
+
