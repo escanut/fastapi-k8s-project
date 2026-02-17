@@ -97,6 +97,7 @@ async def check_db_connection() -> bool:
 # Pool initialization
 pool: Optional[asyncpg.Pool] = None
 
+
 # We want only 10 maximum connections to the database to avoid overwhelming it, and at least 1 connection to ensure we can always connect when needed.
 async def init_db_pool():
     global pool
@@ -110,3 +111,23 @@ async def close_db_pool():
     if pool is not None:
         await pool.close()
         pool = None
+
+
+
+CREATE_TABLE_SQL = """
+CREATE TABLE IF NOT EXISTS products (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    price NUMERIC(10,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+"""
+
+async def init_db():
+    """Initialize the database schema if it doesn't exist."""
+    await init_db_pool()  # Make sure pool is ready
+
+    async with pool.acquire() as connection:
+        await connection.execute(CREATE_TABLE_SQL)
+        print("Database schema ensured.")

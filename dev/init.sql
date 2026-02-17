@@ -6,8 +6,3 @@ CREATE TABLE IF NOT EXISTS products (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
-INSERT INTO products (name, description, price) VALUES
-    ('Laptop', 'A macbook pro m2', 1500),
-    ('Mouse', 'A Mx master 3 fom Logitech', 25),
-    ('Keyboard', 'A overpriced mechanical keyboard from razer', 80);
-
