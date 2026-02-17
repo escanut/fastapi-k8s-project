@@ -1,10 +1,11 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: webapp-backend
   namespace: web-app
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: fastapi
@@ -15,7 +16,8 @@ spec:
     spec:
       containers:
       - name: fastapi
-        image: fastapi-backend:local
+        image: fastapi:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
         env:
@@ -60,24 +62,22 @@ spec:
           timeoutSeconds: 3
         resources:
           requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
             memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
             cpu: "500m"
-
-
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
   name: webapp-backend
   namespace: web-app
 spec:
+  type: ClusterIP
   selector:
     app: fastapi
   ports:
   - port: 8000
     targetPort: 8000
-
+    protocol: TCP

@@ -21,18 +21,11 @@ spec:
           name: db
         env:
         - name: POSTGRES_USER
-          value: admin 
+          value: postgres 
         - name: POSTGRES_PASSWORD
           value: password
         - name: POSTGRES_DB
           value: products
-        volumeMounts:
-        - name: init-script
-          mountPath: /docker-entrypoint-initdb.d
-      volumes:
-      - name: init-script
-        configMap:
-          name: postgres-init
       
 
 ---

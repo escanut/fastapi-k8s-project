@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 
-from responses import ProductCreate, ProductResponse, close_db_pool, init_db_pool, get_all_db_products, get_product_by_id, create_product, delete_product, check_db_connection
+from responses import ProductCreate, ProductResponse, close_db_pool, init_db, init_db_pool, get_all_db_products, get_product_by_id, create_product, delete_product, check_db_connection
 
 
 app = FastAPI()
@@ -27,6 +27,8 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup_event():
     await init_db_pool()
+    await init_db()
+
 
 @app.on_event("shutdown")
 async def shutdown_event():
