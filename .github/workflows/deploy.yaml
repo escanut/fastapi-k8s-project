@@ -65,6 +65,11 @@ jobs:
           # Replace ECR_REPOSITORY_FRONTEND in frontend file
           sed -i "s|ECR_REPOSITORY_FRONTEND|${{ secrets.ECR_REPOSITORY_FRONTEND }}|g" frontend.yaml
 
+      - name: Wait for External Secrets CRDs
+        run: |
+          kubectl wait --for=condition=established --timeout=60s crd/clustersecretstores.external-secrets.io
+          kubectl wait --for=condition=established --timeout=60s crd/externalsecrets.external-secrets.io
+
       - name: Apply Kubernetes manifests
         run: |
           kubectl apply -f prod/k8s/ --validate=false
