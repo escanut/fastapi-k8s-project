@@ -26,7 +26,7 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup_event():
-    await init_db_pool();
+    await init_db_pool()
 
 @app.on_event("shutdown")
 async def shutdown_event():
