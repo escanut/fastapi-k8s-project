@@ -70,6 +70,11 @@ jobs:
           kubectl wait --for=condition=established --timeout=60s crd/clustersecretstores.external-secrets.io
           kubectl wait --for=condition=established --timeout=60s crd/externalsecrets.external-secrets.io
 
+      - name: Verify CRDs exist
+        run: |
+          kubectl get crd clustersecretstores.external-secrets.io
+          kubectl get crd externalsecrets.external-secrets.io
+
       - name: Apply Kubernetes manifests
         run: |
           kubectl apply -f prod/k8s/ --validate=false
