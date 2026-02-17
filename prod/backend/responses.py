@@ -24,6 +24,21 @@ class ProductResponse(BaseModel):
 
 
 
+# For getting the database URL
+async def get_db_url()->str:
+    try:
+                    
+        user = os.getenv("DB_USER", "admin")
+        password = os.getenv("DB_PASSWORD", "password")
+        host = os.getenv("DB_HOST", "localhost")
+        port = int(os.getenv("DB_PORT", 5432))
+        dbname = os.getenv("DB_NAME", "products")
+
+        return f"postgresql://{user}:{password}@{host}:{port}/{dbname}"
+
+    except Exception as e:
+        print(f"Error loading environment variables: {e}")
+        raise
 
 
 async def get_all_db_products() -> List[ProductResponse]:
@@ -87,15 +102,8 @@ pool: Optional[asyncpg.Pool] = None
 async def init_db_pool():
     global pool
     if pool is None:
-       pool = await asyncpg.create_pool(
-            user=os.getenv("DB_USER", "admin"),
-            password=os.getenv("DB_PASSWORD", "password"),
-            host=os.getenv("DB_HOST", "localhost"),
-            port=int(os.getenv("DB_PORT", 5432)),
-            database=os.getenv("DB_NAME", "products"),
-            min_size=1,
-            max_size=10
-        )
+        db_url = await get_db_url()
+        pool = await asyncpg.create_pool(dsn=db_url, min_size=1, max_size=10)
 
 
 async def close_db_pool():
@@ -122,3 +130,4 @@ async def init_db():
 
     async with pool.acquire() as connection:
         await connection.execute(CREATE_TABLE_SQL)
+        print("Database schema ensured.")
