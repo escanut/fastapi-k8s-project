@@ -28,14 +28,23 @@ jobs:
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
           docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
 
-      - name: Build and push image
+      - name: Build and push backend image
         working-directory: ./prod/backend
         run: |
-          docker build -t ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }} .
-          docker tag ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }} \
-                     ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:latest
-          docker push ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
-          docker push ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:latest
+          docker build -t ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_BACKEND }}:${{ github.sha }} .
+          docker tag ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_BACKEND }}:${{ github.sha }} \
+                     ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_BACKEND }}:latest
+          docker push ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_BACKEND }}:${{ github.sha }}
+          docker push ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_BACKEND }}:latest
+
+      - name: Build and push frontend image
+        working-directory: ./prod/frontend
+        run: |
+          docker build -t ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_FRONTEND }}:${{ github.sha }} .
+          docker tag ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_FRONTEND }}:${{ github.sha }} \
+                     ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_FRONTEND }}:latest
+          docker push ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_FRONTEND }}:${{ github.sha }}
+          docker push ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_FRONTEND }}:latest
 
       - name: Update kubeconfig
         run: |
@@ -44,26 +53,35 @@ jobs:
       - name: Replace placeholders in Kubernetes manifests
         working-directory: ./prod/k8s
         run: |
-          # Replace AWS_ACCOUNT_ID
+          # Replace AWS_ACCOUNT_ID in all files
           find . -type f -name "*.yaml" -exec sed -i "s|AWS_ACCOUNT_ID|${{ secrets.AWS_ACCOUNT_ID }}|g" {} +
           
-          # Replace ECR_REGISTRY
+          # Replace ECR_REGISTRY in all files
           find . -type f -name "*.yaml" -exec sed -i "s|ECR_REGISTRY|${{ secrets.ECR_REGISTRY }}|g" {} +
           
-          # Replace ECR_REPOSITORY
-          find . -type f -name "*.yaml" -exec sed -i "s|ECR_REPOSITORY|${{ secrets.ECR_REPOSITORY }}|g" {} +
+          # Replace ECR_REPOSITORY_BACKEND in backend file
+          sed -i "s|ECR_REPOSITORY_BACKEND|${{ secrets.ECR_REPOSITORY_BACKEND }}|g" fastapi.yaml
+
+          # Replace ECR_REPOSITORY_FRONTEND in frontend file
+          sed -i "s|ECR_REPOSITORY_FRONTEND|${{ secrets.ECR_REPOSITORY_FRONTEND }}|g" frontend.yaml
 
       - name: Apply Kubernetes manifests
         run: |
           kubectl apply -f prod/k8s/
 
-      - name: Update deployment with commit SHA
+      - name: Update backend deployment with commit SHA
         run: |
           kubectl set image deployment/webapp-backend \
-            fastapi=${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }} \
+            fastapi=${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_BACKEND }}:${{ github.sha }} \
             -n web-app
 
-      - name: Sync frontend to S3
+      - name: Update frontend deployment with commit SHA
         run: |
-          aws s3 sync ./prod/frontend s3://${{ secrets.S3_BUCKET_NAME }} --delete
-          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+          kubectl set image deployment/webapp-frontend \
+            frontend=${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_FRONTEND }}:${{ github.sha }} \
+            -n web-app
+
+      - name: Verify deployments
+        run: |
+          kubectl rollout status deployment/webapp-backend -n web-app --timeout=120s
+          kubectl rollout status deployment/webapp-frontend -n web-app --timeout=120s
