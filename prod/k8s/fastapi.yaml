@@ -22,7 +22,7 @@ spec:
       
       containers:
       - name: fastapi
-        image: ECR_REGISTRY/ECR_REPOSITORY:latest
+        image: ECR_REGISTRY/ECR_REPOSITORY_BACKEND:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
