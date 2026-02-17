@@ -31,7 +31,7 @@ async def get_db_url()->str:
         user = os.getenv("DB_USER", "admin")
         password = os.getenv("DB_PASSWORD", "password")
         host = os.getenv("DB_HOST", "localhost")
-        port = os.getenv("DB_PORT", 5432)
+        port = int(os.getenv("DB_PORT", 5432))
         dbname = os.getenv("DB_NAME", "products")
 
         return f"postgresql://{user}:{password}@{host}:{port}/{dbname}"
