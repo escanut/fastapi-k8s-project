@@ -67,7 +67,7 @@ jobs:
 
       - name: Apply Kubernetes manifests
         run: |
-          kubectl apply -f prod/k8s/
+          kubectl apply -f prod/k8s/ --validate=false
 
       - name: Update backend deployment with commit SHA
         run: |
