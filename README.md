@@ -111,8 +111,6 @@ The application code remains unchanged across environments. Only the secret deli
 ---
 
 ## Repository Structure
-
-## Repository Structure
 ```
 .
 ├── dev/
