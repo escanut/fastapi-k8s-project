@@ -112,7 +112,8 @@ The application code remains unchanged across environments. Only the secret deli
 
 ## Repository Structure
 
-```text
+## Repository Structure
+```
 .
 ├── dev/
 │   ├── backend/
@@ -128,8 +129,7 @@ The application code remains unchanged across environments. Only the secret deli
 └── .github/
     └── workflows/
         └── deploy.yaml
-
-
+```
 
 ---
 
@@ -161,8 +161,8 @@ Validating locally in Minikube eliminates unnecessary cloud cost. Only code conf
 ## Contact
 
 Victor Ogechukwu Ojeje  
-Cloud Engineer 
+Cloud Engineer
 
-- LinkedIn: https://www.linkedin.com/in/victorojeje/  
-- GitHub: https://github.com/escanut  
+- LinkedIn: https://www.linkedin.com/in/victorojeje/
+- GitHub: https://github.com/escanut
 - Email: ojejevictor@gmail.com
