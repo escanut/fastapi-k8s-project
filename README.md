@@ -112,6 +112,7 @@ The application code remains unchanged across environments. Only the secret deli
 
 ## Repository Structure
 
+```text
 .
 ├── dev/
 │   ├── backend/
@@ -127,7 +128,6 @@ The application code remains unchanged across environments. Only the secret deli
 └── .github/
     └── workflows/
         └── deploy.yaml
-
 
 
 
